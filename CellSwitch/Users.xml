@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Users xmlns:ns1="Users">
+  <User>
+    <UserID>1</UserID>
+    <FirstName>David</FirstName>
+    <LastName>Paluy</LastName>
+    <PhoneNumber>0546618046</PhoneNumber>
+    <Note>My Note</Note>
+  </User>
+</Users>
