@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" version="1.0">
+  <xs:element name="Users">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="User">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="UserID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="1" type="xs:int" />
+              <xs:element name="FirstName" type="xs:string" minOccurs="0" />
+              <xs:element name="LastName" type="xs:string" minOccurs="0" />
+              <xs:element name="PhoneNumber" type="xs:string" />
+              <xs:element name="Note" type="xs:string" minOccurs="0" />
+              <xs:element name="Enabled" type="xs:boolean" default="true" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="UserID">
+      <xs:selector xpath=".//User" />
+      <xs:field xpath="UserID" />
+    </xs:key>
+  </xs:element>
+</xs:schema>
