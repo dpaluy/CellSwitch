@@ -8,17 +8,26 @@
     <Setting Name="TransmissionType" Type="System.String" Scope="User">
       <Value Profile="(Default)">None</Value>
     </Setting>
-    <Setting Name="Parity" Type="System.IO.Ports.Parity" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="BaudRate" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">9600</Value>
-    </Setting>
-    <Setting Name="DataBits" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">8</Value>
-    </Setting>
     <Setting Name="TransmitterRegistrationValue" Type="System.String" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="StopBits" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Parity" Type="System.String" Scope="User">
+      <Value Profile="(Default)">None</Value>
+    </Setting>
+    <Setting Name="DataBits" Type="System.String" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="BaudRate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">115000</Value>
+    </Setting>
+    <Setting Name="FlowControl" Type="System.IO.Ports.Handshake" Scope="User">
+      <Value Profile="(Default)">None</Value>
+    </Setting>
+    <Setting Name="SwitchPhone" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0549723143</Value>
     </Setting>
   </Settings>
 </SettingsFile>

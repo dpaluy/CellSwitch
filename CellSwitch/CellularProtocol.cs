@@ -60,7 +60,8 @@ namespace CellSwitch
                 return STATUS.ERROR_COM_PORT;
 
             int i = 1;
-            STATUS status;
+            STATUS status = STATUS.ERROR_COM_PORT;
+
             status = CommandATE();
             ReportProgress(ref status, bgw, ref e, ref i);
             if (STATUS.OK != status) return status;
@@ -75,37 +76,6 @@ namespace CellSwitch
 
             string pin = "";
             status = CommandCPIN(pin);
-            ReportProgress(ref status, bgw, ref e, ref i);
-            if (STATUS.OK != status) return status;
-
-            status = CommandCRC();
-            ReportProgress(ref status, bgw, ref e, ref i);
-            if (STATUS.OK != status) return status;
-
-            bool identify = true;
-            status = CommandCLIP(identify);
-            ReportProgress(ref status, bgw, ref e, ref i);
-            if (STATUS.OK != status) return status;
-
-            bool PDU_mode = false;
-            status = CommandCMGF(PDU_mode);
-            ReportProgress(ref status, bgw, ref e, ref i);
-            if (STATUS.OK != status) return status;
-
-            status = CommandCOPS(ref operatorName);
-            ReportProgress(ref status, bgw, ref e, ref i);
-            if (STATUS.OK != status) return status;
-
-            byte te = 0;
-            byte ta = 0;
-            status = CommandIFC(te, ta);
-            ReportProgress(ref status, bgw, ref e, ref i);
-            if (STATUS.OK != status) return status;
-
-            bool n = true;
-            byte cmd = 1;
-            byte klass = 7;
-            status = CommandCCWA(n, cmd, klass);
             ReportProgress(ref status, bgw, ref e, ref i);
             if (STATUS.OK != status) return status;
 
@@ -218,115 +188,8 @@ namespace CellSwitch
             // TODO: handle pin authorization
             StringBuilder sb = new StringBuilder("AT+CPIN?");
             string atCommand = sb.ToString();
-            string expectedResult = "+CPIN: READY\r\n\r\nOK";
+            string expectedResult = "+CPIN: READY"; // "+CPIN: READY\r\n\r\nOK";
             return sendAT_Command(atCommand, expectedResult, MAX_NUMBER_OF_TRIES, 20*SEC);
-        }
-
-        /// <summary>
-        /// CRC - Cellular Result Codes
-        /// Enables extended format reporting
-        /// </summary>
-        /// <returns>Execution STATUS</returns>
-        public STATUS CommandCRC()
-        {
-            StringBuilder sb = new StringBuilder("AT+CRC=1");
-            string atCommand = sb.ToString();
-            string expectedResult = "OK";
-            return sendAT_Command(atCommand, expectedResult, MAX_NUMBER_OF_TRIES, (int)(0.2 * SEC));
-        }
-
-        /// <summary>
-        /// CLIP - Calling line identification presentation
-        /// </summary>
-        /// <param name="isEnable">CLI indication</param>
-        /// <returns>Execution STATUS</returns>
-        public STATUS CommandCLIP(bool isEnable)
-        {
-            StringBuilder sb = new StringBuilder("AT+CLIP=");
-            sb.AppendFormat("{0}", (true == isEnable) ? 1: 0);
-            string atCommand = sb.ToString();
-            string expectedResult = "OK";
-            return sendAT_Command(atCommand, expectedResult, MAX_NUMBER_OF_TRIES, 180 * SEC);
-        }
-
-        /// <summary>
-        /// CMGF - Message Format
-        /// </summary>
-        /// <param name="isPDU">true - PDU mode, false - Text mode</param>
-        /// <returns>Execution STATUS</returns>
-        public STATUS CommandCMGF(bool isPDU)
-        {
-            StringBuilder sb = new StringBuilder("AT+CMGF=");
-            sb.AppendFormat("{0}", (true == isPDU) ? 0 : 1);
-            string atCommand = sb.ToString();
-            string expectedResult = "OK";
-            return sendAT_Command(atCommand, expectedResult, MAX_NUMBER_OF_TRIES, 5 * SEC);
-        }
-
-        /// <summary>
-        /// COPS - Operator Selection
-        /// </summary>
-        /// <returns>Execution STATUS</returns>
-        public STATUS CommandCOPS(ref string operatorName)
-        {
-            StringBuilder sb = new StringBuilder("AT+COPS?" + CR);
-            string atCommand = sb.ToString();
-            string expectedResultStart = "+COPS: 0,0,";
-            string expectedResultEnd = "OK";
-            string output = string.Empty;
-            bool result = false;
-            int tries = 0;
-            while (!result && tries < MAX_NUMBER_OF_TRIES)
-            {
-                output = sendData(atCommand, 180 * SEC);
-                result = (output.StartsWith(expectedResultStart) && output.EndsWith(expectedResultEnd));
-                ++tries;
-            }
-            int start = output.IndexOf("\"")+1;
-            int end = output.LastIndexOf("\"")- start;
-            operatorName = output.Substring(start, end);
-            //return sendAT_Command(atCommand, expectedResult, MAX_NUMBER_OF_TRIES, 180 * SEC);
-            return ((result)? STATUS.OK: STATUS.ERROR_AT_COMMAND);
-        }
-
-        /// <summary>
-        /// Call waiting
-        /// </summary>
-        /// <param name="n">Enables/disables the presentation of an unsolicited result code</param>
-        /// <param name="cmd">Enables(1)/Disables(0) or queries(2) the service at network level</param>
-        /// <param name="klass">
-        ///     Represents class of information
-        ///     <ul>
-        ///         <li>1 - voice(telephony)</li>    
-        ///         <li>2 - data</li>
-        ///         <li>4 - fax</li>
-        ///         <li>7 - sum of all (voice+data+fax)</li>
-        ///     </ul>
-        /// </param>
-        /// <returns>Execution STATUS</returns>
-        public STATUS CommandCCWA(bool n, byte cmd, byte klass)
-        {
-            StringBuilder sb = new StringBuilder("AT+CCWA=");
-            sb.AppendFormat("{0},{1},{2}", (true == n) ? 1 : 0, cmd, klass);
-            string atCommand = sb.ToString();
-            string expectedResult = "OK";
-            return sendAT_Command(atCommand, expectedResult, MAX_NUMBER_OF_TRIES, 220 * SEC);
-        }
-
-        /// <summary>
-        /// DTE-Modem Local Flow Control
-        /// </summary>
-        /// <param name="te"></param>
-        /// <param name="ta"></param>
-        /// <returns>Execution STATUS</returns>
-        public STATUS CommandIFC(byte te, byte ta)
-        {
-            StringBuilder sb = new StringBuilder("AT+IFC=");
-            sb.AppendFormat("{0},{1}", te, ta);
-            string atCommand = sb.ToString();
-            string expectedResult = "OK";
-            return sendAT_Command(atCommand, expectedResult, MAX_NUMBER_OF_TRIES, DEFAULT_TIMEOUT);
-
         }
 
         /// <summary>

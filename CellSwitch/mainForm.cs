@@ -22,6 +22,7 @@ namespace CellSwitch
         private string phones = string.Empty;
         private string switchPhoneNumber_ = string.Empty;
         private int percent = 0;
+        private string switchDefaultNumber_ = Properties.Settings.Default.SwitchPhone;
         #endregion
 
         #region Constructor
@@ -45,7 +46,7 @@ namespace CellSwitch
 
             removeUser.Enabled = false;
             statusProgressBar.Visible = false;
-            cmbSwitchPhone.Items.Add("0549723143");
+            cmbSwitchPhone.Items.Add(switchDefaultNumber_);
             cmbSwitchPhone.SelectedIndex = 0;
             btnConnectTtransmitter.Focus();
         }
@@ -55,10 +56,10 @@ namespace CellSwitch
         private void SetCommunicationValues()
         {
             cm_.PortName = cmbComPort.Text;
-            cm_.Parity = "None";
-            cm_.StopBits = "1";
-            cm_.DataBits = "8";
-            cm_.BaudRate = "9600";
+            cm_.Parity = Properties.Settings.Default.Parity;
+            cm_.StopBits = Properties.Settings.Default.StopBits;
+            cm_.DataBits = Properties.Settings.Default.DataBits;
+            cm_.BaudRate = Properties.Settings.Default.BaudRate;
         }
         #endregion
 

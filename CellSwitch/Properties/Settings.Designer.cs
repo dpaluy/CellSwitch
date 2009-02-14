@@ -49,9 +49,34 @@ namespace CellSwitch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.IO.Ports.Parity Parity {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string TransmitterRegistrationValue {
             get {
-                return ((global::System.IO.Ports.Parity)(this["Parity"]));
+                return ((string)(this["TransmitterRegistrationValue"]));
+            }
+            set {
+                this["TransmitterRegistrationValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string StopBits {
+            get {
+                return ((string)(this["StopBits"]));
+            }
+            set {
+                this["StopBits"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("None")]
+        public string Parity {
+            get {
+                return ((string)(this["Parity"]));
             }
             set {
                 this["Parity"] = value;
@@ -60,34 +85,49 @@ namespace CellSwitch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9600")]
-        public int BaudRate {
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public string DataBits {
             get {
-                return ((int)(this["BaudRate"]));
+                return ((string)(this["DataBits"]));
+            }
+            set {
+                this["DataBits"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("115000")]
+        public string BaudRate {
+            get {
+                return ((string)(this["BaudRate"]));
             }
             set {
                 this["BaudRate"] = value;
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int DataBits {
+        [global::System.Configuration.DefaultSettingValueAttribute("None")]
+        public global::System.IO.Ports.Handshake FlowControl {
             get {
-                return ((int)(this["DataBits"]));
+                return ((global::System.IO.Ports.Handshake)(this["FlowControl"]));
+            }
+            set {
+                this["FlowControl"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string TransmitterRegistrationValue {
+        [global::System.Configuration.DefaultSettingValueAttribute("0549723143")]
+        public string SwitchPhone {
             get {
-                return ((string)(this["TransmitterRegistrationValue"]));
+                return ((string)(this["SwitchPhone"]));
             }
             set {
-                this["TransmitterRegistrationValue"] = value;
+                this["SwitchPhone"] = value;
             }
         }
     }
