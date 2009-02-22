@@ -14,7 +14,7 @@ namespace CellSwitch
     public partial class mainForm : Form
     {
         #region Variables
-        private int MAX_ALLOWED_USERS = 1559;
+        private int MAX_ALLOWED_USERS = 2000;
         private SwitchProtocol sp_;
         private CommunicationManager cm_;
         private enum SwitchControl { FROM, TO, NA };

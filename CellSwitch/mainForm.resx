@@ -1852,7 +1852,7 @@
     <value>users</value>
   </data>
   <data name="&gt;&gt;users.Type" xml:space="preserve">
-    <value>CellSwitch.Users, Gizmo Gate, Version=1.1.1.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>CellSwitch.Users, Gizmo Gate, Version=1.1.5.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;newFileToolStripButton.Name" xml:space="preserve">
     <value>newFileToolStripButton</value>
