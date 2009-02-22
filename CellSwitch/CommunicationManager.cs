@@ -158,12 +158,12 @@ namespace CellSwitch
 
         private void InitializeParameters(string baud, string par, string sBits, string dBits, string name, RichTextBox rtb)
         {
-            BaudRate = baud;
-            Parity = par;
-            StopBits = sBits;
-            DataBits = dBits;
-            PortName = name;
-            DisplayWindow = rtb;
+            _baudRate = baud;
+            _parity = par;
+            _stopBits = sBits;
+            _dataBits = dBits;
+            _portName = name;
+            _displayWindow = rtb;
             _addEOL = true;
             _readFullLine = false;
         }
@@ -176,6 +176,7 @@ namespace CellSwitch
 
             _port = new SerialPort();
             SetComPortProperties();
+            _port.Handshake = Handshake.RequestToSend;
             //_port.DataReceived += new SerialDataReceivedEventHandler(_port_DataReceived);
             //_port.ErrorReceived += new SerialErrorReceivedEventHandler(_port_ErrorReceived);
             _port.Open();
@@ -205,9 +206,6 @@ namespace CellSwitch
             _port.StopBits = (StopBits)Enum.Parse(typeof(StopBits), _stopBits);    //StopBits
             _port.Parity = (Parity)Enum.Parse(typeof(Parity), _parity);    //Parity
             _port.PortName = _portName;   //PortName
-            _port.ReadTimeout = 500;
-            _port.WriteTimeout = 500;
-            _port.Handshake = Handshake.None;
         }
         #endregion
 
