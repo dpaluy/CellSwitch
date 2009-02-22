@@ -90,5 +90,17 @@ namespace CellSwitch.Properties {
                 this["TransmitterRegistrationValue"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0549723143")]
+        public string SwitchPhone {
+            get {
+                return ((string)(this["SwitchPhone"]));
+            }
+            set {
+                this["SwitchPhone"] = value;
+            }
+        }
     }
 }

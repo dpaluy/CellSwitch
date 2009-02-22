@@ -8,7 +8,8 @@ namespace CellSwitch
     public class SwitchProtocol
     {
         #region Variables
-        private string phonesTest = buildPhones();
+        private const int MAX_DATA_SIZE = 998;
+        //private string phonesTest = buildPhones();
         private CellularProtocol cp_;
         private bool connected_ = false;
         private string transmitterID_ = string.Empty;
@@ -157,17 +158,38 @@ namespace CellSwitch
         #endregion
 
         #region Send Phone List
+
+        private string setData(ref string phones)
+        {
+            int last_index = (phones.Length > MAX_DATA_SIZE) ? MAX_DATA_SIZE : phones.Length;
+            StringBuilder sb = new StringBuilder(phones.Substring(0, last_index));
+            if (phones.Length < MAX_DATA_SIZE && (sb.Length > 0) )
+                sb.Append("$$");
+            string data = sb.ToString();
+            phones = phones.Substring(last_index);
+            return data;
+        }
+
         public void SendPhoneList(string phones)
         {
-            string phonesList = phones; //phonesTest;
-
-            Command cmd = new Command(0x23, 0x00, 0x00, phonesList);
-            string output = SendCommandLN(cmd, FormTools.SEC * 50);
+            string output = "";
             int tries = 0;
-            while (output != "ACK" && tries < 3)
+
+            string data = setData(ref phones);
+            Command cmd = new Command(0x23, 0x00, 0x00, data);
+            StringBuilder sb = new StringBuilder("S");
+            sb.Append(cmd.ToString());
+            data = sb.ToString();
+            while (data.Length > 0 && tries < 3)
             {
-                output = cp_.ReadDataLN(FormTools.SEC * 60);
-                tries++;
+                output = SendDataLN(data, FormTools.SEC * 20);
+                if (output.IndexOf("ACK") == 0)
+                {
+                    data = setData(ref phones);
+                    tries = 0;
+                }
+                else
+                    tries++;
             }
         }
 
@@ -209,6 +231,13 @@ namespace CellSwitch
             string output = string.Empty;
             output = cp_.sendDataLN(sb.ToString(), timeout);
             
+            return output;
+        }
+
+        private string SendDataLN(string data, int timeout)
+        {
+            string output = string.Empty;
+            output = cp_.sendDataLN(data, timeout);
             return output;
         }
         #endregion       

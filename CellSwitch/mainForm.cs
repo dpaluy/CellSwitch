@@ -45,7 +45,7 @@ namespace CellSwitch
 
             removeUser.Enabled = false;
             statusProgressBar.Visible = false;
-            cmbSwitchPhone.Items.Add("0549723143");
+            cmbSwitchPhone.Items.Add(Properties.Settings.Default.SwitchPhone);
             cmbSwitchPhone.SelectedIndex = 0;
             btnConnectTtransmitter.Focus();
         }
@@ -70,6 +70,8 @@ namespace CellSwitch
 
         private void mainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Properties.Settings.Default.SwitchPhone = cmbSwitchPhone.Text;
+            Properties.Settings.Default.Save();
             exitApplication();
         }
 

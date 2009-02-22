@@ -20,5 +20,8 @@
     <Setting Name="TransmitterRegistrationValue" Type="System.String" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="SwitchPhone" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0549723143</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
