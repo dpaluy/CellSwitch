@@ -8,7 +8,7 @@ namespace CellSwitch
     public class SwitchProtocol
     {
         #region Variables
-        private const int MAX_DATA_SIZE = 998;
+        private const int MAX_DATA_SIZE = 1000;
         //private string phonesTest = buildPhones();
         private CellularProtocol cp_;
         private bool connected_ = false;

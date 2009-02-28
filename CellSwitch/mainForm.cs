@@ -382,8 +382,11 @@ namespace CellSwitch
             if (false == newDataSet()) return;
 
             string fileLoadFrom = FormTools.openFileDialog("XML files (*.xml)|*.xml|All files (*.*)|*.*", "Open Users File");
-            this.users.ReadXml(fileLoadFrom);
-            dataGridView.ClearSelection();
+            if (fileLoadFrom.Length > 0)
+            {
+                this.users.ReadXml(fileLoadFrom);
+                dataGridView.ClearSelection();
+            }
         }
         #endregion
 
@@ -391,7 +394,8 @@ namespace CellSwitch
         private void saveFileToolStripButton_Click(object sender, EventArgs e)
         {
             string fileSaveTo = FormTools.saveFileDialog("XML files (*.xml)|*.xml|All files (*.*)|*.*", "Save Users To File");
-            this.users.WriteXml(fileSaveTo, XmlWriteMode.WriteSchema);
+            if (fileSaveTo.Length > 0)
+                this.users.WriteXml(fileSaveTo, XmlWriteMode.WriteSchema);
         }
         #endregion
 

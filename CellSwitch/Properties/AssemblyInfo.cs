@@ -11,7 +11,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("AV-GAD Systems LTD.")]
 [assembly: AssemblyProduct("Gismo Gate")]
-[assembly: AssemblyCopyright("Copyright © AV-GAD 2008")]
+[assembly: AssemblyCopyright("Copyright © AV-GAD 2009")]
 [assembly: AssemblyTrademark("Your Control: Any time, Any Where, Any Device")]
 [assembly: AssemblyCulture("")]
 
@@ -30,6 +30,6 @@ using System.Resources;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.1.5.0")]
-[assembly: AssemblyFileVersion("1.1.5.0")]
+[assembly: AssemblyVersion("1.2.1.0")]
+[assembly: AssemblyFileVersion("1.2.1.0")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
