@@ -102,5 +102,17 @@ namespace CellSwitch.Properties {
                 this["SwitchPhone"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Log {
+            get {
+                return ((bool)(this["Log"]));
+            }
+            set {
+                this["Log"] = value;
+            }
+        }
     }
 }

@@ -1,36 +1,47 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace CellSwitch
 {
-    public class Logger// : LoggerInterface
+    public class Logger
     {
-        //#region Constructor
-        //#endregion
+        #region Variables
+        private FileStream fs;
+        private StreamWriter sw;
+        private bool isLogged = false;
+        #endregion
 
-        //#region Incoming
-        //public void logIncoming(string msg)
-        //{
+        #region Constructor
+        public Logger(bool log)
+        {
+            string logFile = "LOGFILE.TXT";
+            isLogged = log;
+            fs = new FileStream(logFile, FileMode.OpenOrCreate, FileAccess.Write);
+            sw = new StreamWriter(fs);
 
-        //}
-        //#endregion
+        }
+        
+        ~Logger()
+        {
+            sw.Close();
+            fs.Close();
+        }    
 
-        //#region Outgoing
-        //#endregion
+        public void log(string msg, bool _addEOL)
+        {
+            if (false == isLogged) return;
 
-        //#region Normal
-        //#endregion
+            if (_addEOL == true)
+                sw.WriteLine(msg);
+            else
+                sw.Write(msg);
+            sw.Flush();
+            sw.Close();
+        }
+        #endregion
 
-        //#region Warning
-        //#endregion
-
-        //#region Outgoing
-        //#endregion
-
-        //void logOutgoing(string msg);
-        //void logNormal(string msg);
-        //void logWarning(string msg);
-        //void logError(string msg);
+        
     }
 }
