@@ -22,6 +22,7 @@ namespace CellSwitch
         private string phones = string.Empty;
         private string switchPhoneNumber_ = string.Empty;
         private int percent = 0;
+        private bool sendDataResult = false;
         #endregion
 
         #region Constructor
@@ -535,7 +536,7 @@ namespace CellSwitch
                     break;
                 case SwitchControl.TO:
                     //SetStatusText("Sending Data...");
-                    sp_.SendPhoneList(phones);
+                    sendDataResult = sp_.SendPhoneList(phones);
                     break;
                 default:
                     break;
@@ -576,7 +577,13 @@ namespace CellSwitch
                     toolStripStatus.Text = "All data loaded!";
                     break;
                 case SwitchControl.TO:
-                    toolStripStatus.Text = "Switch updated successfully!";
+                    if (sendDataResult == false)
+                    {
+                        toolStripStatus.Text = "Switch updated failed!";
+                        FormTools.ErrBox("Switch updated failed!", "Switch Update Status");
+                    }
+                    else
+                        toolStripStatus.Text = "Switch updated successfully!";
                     break;
                 default:
                     break;

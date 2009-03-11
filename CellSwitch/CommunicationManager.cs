@@ -21,7 +21,6 @@ namespace CellSwitch
         #endregion
 
         #region Variables
-        private Logger logger_;
         private bool _addEOL;
         private string _baudRate = string.Empty;
         private string _parity = string.Empty;
@@ -167,7 +166,6 @@ namespace CellSwitch
             _displayWindow = rtb;
             _addEOL = true;
             _readFullLine = false;
-            logger_ = new Logger(Properties.Settings.Default.Log);
         }
         #endregion
 
@@ -226,7 +224,6 @@ namespace CellSwitch
                     _port.Write(msg);
                     FormTools.Wait(100);
                     SendEndOfLine();
-                    logger_.log(msg, _addEOL);
                     FormTools.Wait(100);
                     //display the message
                     DisplayData(MessageType.Outgoing, "\n" + msg + " ");

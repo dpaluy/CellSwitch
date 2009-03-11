@@ -170,8 +170,9 @@ namespace CellSwitch
             return data;
         }
 
-        public void SendPhoneList(string phones)
+        public bool SendPhoneList(string phones)
         {
+            const int MAX_TRIES = 1;
             string output = "";
             int tries = 0;
 
@@ -180,7 +181,7 @@ namespace CellSwitch
             StringBuilder sb = new StringBuilder("S");
             sb.Append(cmd.ToString());
             data = sb.ToString();
-            while (data.Length > 0 && tries < 3)
+            while (data.Length > 0 && tries < MAX_TRIES)
             {
                 output = SendDataLN(data, FormTools.SEC * 20);
                 if (output.IndexOf("ACK") == 0)
@@ -191,6 +192,13 @@ namespace CellSwitch
                 else
                     tries++;
             }
+
+            bool result = true;
+            if (data.Length > 0 && tries >= MAX_TRIES)
+            {
+                result = false;
+            }
+            return result;
         }
 
         private static string buildPhones()
