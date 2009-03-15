@@ -36,13 +36,7 @@ namespace CellSwitch
                 return;
             }
             try {
-                DataRow user = ds_.Tables[0].NewRow();
-                user["FirstName"] = txtFirstName.Text;
-                user["LastName"] = txtLastName.Text;
-                user["PhoneNumber"] = txtPhone.Text;
-                user["Note"] = txtNote.Text;
-                user["Enabled"] = true;
-                ds_.Tables[0].Rows.Add(user);
+                addNewUser(txtFirstName.Text, txtLastName.Text, txtPhone.Text, txtNote.Text);
             } catch (Exception err)
             {
                 FormTools.ErrBox(err.ToString(), "Add new user");
@@ -50,6 +44,17 @@ namespace CellSwitch
                 this.Close();
             }
 
+        }
+
+        private void addNewUser(string firstName, string lastName, string phone, string note)
+        {
+            DataRow user = ds_.Tables[0].NewRow();
+            user["FirstName"] = firstName;
+            user["LastName"] = lastName;
+            user["PhoneNumber"] = phone;
+            user["Note"] = note;
+            user["Enabled"] = true;
+            ds_.Tables[0].Rows.Add(user);
         }
     }
 }

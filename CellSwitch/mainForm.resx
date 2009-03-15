@@ -834,10 +834,22 @@
     <value>0</value>
   </data>
   <data name="userIDDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>#</value>
+    <value>ID</value>
+  </data>
+  <data name="userIDDataGridViewTextBoxColumn.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="userIDDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
-    <value>20</value>
+    <value>5</value>
+  </data>
+  <metadata name="index.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="index.HeaderText" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="index.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="firstNameDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>First Name</value>
@@ -1130,6 +1142,24 @@
     <value>&amp;Save</value>
   </data>
   <data name="toolStripSeparator8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>137, 6</value>
+  </data>
+  <data name="importToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
+  </data>
+  <data name="importToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Import</value>
+  </data>
+  <data name="exportToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
+  </data>
+  <data name="exportToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Export</value>
+  </data>
+  <data name="exportToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
     <value>137, 6</value>
   </data>
   <data name="exitToolStripMenuItem1.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
@@ -1816,7 +1846,7 @@
     <value>users</value>
   </data>
   <data name="&gt;&gt;users.Type" xml:space="preserve">
-    <value>CellSwitch.Users, Gizmo Gate, Version=1.2.1.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>CellSwitch.Users, Gizmo Gate, Version=1.2.2.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;newFileToolStripButton.Name" xml:space="preserve">
     <value>newFileToolStripButton</value>
@@ -1906,6 +1936,24 @@
     <value>toolStripSeparator8</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;importToolStripMenuItem.Name" xml:space="preserve">
+    <value>importToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;importToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;exportToolStripMenuItem.Name" xml:space="preserve">
+    <value>exportToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;exportToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;exitToolStripMenuItem1.Name" xml:space="preserve">
@@ -2170,6 +2218,12 @@
     <value>userIDDataGridViewTextBoxColumn</value>
   </data>
   <data name="&gt;&gt;userIDDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;index.Name" xml:space="preserve">
+    <value>index</value>
+  </data>
+  <data name="&gt;&gt;index.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;firstNameDataGridViewTextBoxColumn.Name" xml:space="preserve">

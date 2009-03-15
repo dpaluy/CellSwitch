@@ -593,6 +593,7 @@ namespace CellSwitch
         }
         #endregion
 
+        #region Parse Result
         private void ParseResult()
         {
             DataTable dtg = users.Tables[0]; 
@@ -629,5 +630,72 @@ namespace CellSwitch
             } // End of while
             dataGridView.DataSource = dtg;
         }
+        #endregion
+
+        #region User
+        private void addNewUser(string firstName, string lastName, string phone, string note)
+        {
+            DataRow user = this.users.Tables[0].NewRow();
+            user["FirstName"] = firstName;
+            user["LastName"] = lastName;
+            user["PhoneNumber"] = phone;
+            user["Note"] = note;
+            user["Enabled"] = true;
+            this.users.Tables[0].Rows.Add(user);
+        }
+
+        private void addNewRow(DataRow row)
+        {
+            string firstName = (string)row["First Name"];
+            string lastName = (string)row["Last Name"];
+            string phone = (string)row["Phone"];
+            string note = (string)row["Note"];
+            addNewUser(firstName, lastName, phone, note);
+        }
+
+        #endregion
+
+        #region Xsl Import
+        public void import_xsl()
+        {
+            string filename = string.Empty;
+            filename = FormTools.openFileDialog("Excel files (*.xls)|*.xls|All files (*.*)|*.*", "Import from...");
+            if (filename.Length > 0)
+            {
+                String strConn = "Provider=Microsoft.Jet.OLEDB.4.0;" +
+                             "Data Source=" + filename + ";" +
+                             "Extended Properties=Excel 8.0;";
+                try
+                {
+                    DataSet ds = new DataSet();
+                    //You must use the $ after the object you reference in the spreadsheet
+                    System.Data.OleDb.OleDbDataAdapter da = new System.Data.OleDb.OleDbDataAdapter(
+                                                    "SELECT * FROM [Sheet1$]", strConn);
+                    da.Fill(ds);
+
+                    foreach (DataRow theRow in ds.Tables[0].Rows)
+                    {
+                        addNewRow(theRow);
+                    }
+                } catch (Exception err)
+                {
+                    FormTools.ErrBox(err.ToString(), "Importing from Excel");
+                }
+                dataGridView.ClearSelection();
+            }
+        }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            import_xsl();
+        }
+        #endregion
+
+        #region Xsl Export
+        public void export_xsl()
+        {
+
+        }
+        #endregion
     }
 }
