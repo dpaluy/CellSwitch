@@ -207,6 +207,10 @@
   <ItemGroup>
     <Content Include="gizmogate.ico" />
     <None Include="Resources\Logoe_CLR.bmp" />
+    <None Include="Resources\export_excel.bmp" />
+    <None Include="Resources\export_excel1.bmp" />
+    <None Include="Resources\export_excel2.bmp" />
+    <None Include="Resources\import_excel.bmp" />
     <Content Include="Users.xml" />
   </ItemGroup>
   <ItemGroup>

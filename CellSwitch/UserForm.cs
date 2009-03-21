@@ -36,17 +36,19 @@ namespace CellSwitch
                 return;
             }
             try {
-                addNewUser(txtFirstName.Text, txtLastName.Text, txtPhone.Text, txtNote.Text);
+                if (!addNewUser(txtFirstName.Text, txtLastName.Text, txtPhone.Text, txtNote.Text))
+                    FormTools.ErrBox("The Phone Number already exists!", "Add new user");
+                else
+                    this.Close();
+
             } catch (Exception err)
             {
                 FormTools.ErrBox(err.Message, "Add new user");
-            } finally {
                 this.Close();
             }
-
         }
 
-        private void addNewUser(string firstName, string lastName, string phone, string note)
+        private bool addNewUser(string firstName, string lastName, string phone, string note)
         {
             DataRow user = ds_.Tables[0].NewRow();
             user["FirstName"] = firstName;
@@ -54,7 +56,25 @@ namespace CellSwitch
             user["PhoneNumber"] = phone;
             user["Note"] = note;
             user["Enabled"] = true;
-            ds_.Tables[0].Rows.Add(user);
+            foreach (DataRow row in ds_.Tables[0].Rows)
+            {
+                string currentPhone = (string)row["PhoneNumber"];
+                if (currentPhone.CompareTo(phone) == 0)
+                {
+                    user = null;
+                    break;
+                }
+            }
+            if (user != null)
+            {
+                ds_.Tables[0].Rows.Add(user);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
     }
 }

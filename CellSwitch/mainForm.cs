@@ -437,23 +437,41 @@ namespace CellSwitch
         #region Add new user
         private void newUserAdd_Click(object sender, EventArgs e)
         {
-            UserForm uf = new UserForm(this.users);
-            uf.ShowDialog();
+            addUserDialog();
+        }
+
+        private void addUserDialog()
+        {
+	        UserForm uf = new UserForm(this.users);
+                    uf.ShowDialog();
         }
         #endregion
 
         #region Remove Selected User
+        private void dataGridView_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+                removeRow();
+            else if (e.KeyCode == Keys.Insert)
+                addUserDialog();
+        }
+
         private void removeUser_Click(object sender, EventArgs e)
+        {
+            removeRow();
+        }
+
+        private void removeRow()
         {
             int selectedRowsCount = dataGridView.SelectedRows.Count;
             if (selectedRowsCount > 0)
             {
                 if (DialogResult.No == FormTools.ConfimBox("Are you sure?", "Delete Users")) return;
 
-                for (int i = selectedRowsCount-1; i >= 0; i--)
+                for (int i = selectedRowsCount - 1; i >= 0; i--)
                     users.Tables[0].Rows[dataGridView.SelectedRows[i].Index].Delete();
+                toolStripStatus.Text = "Row removed!";
             }
-
         }
         #endregion
 
@@ -643,7 +661,17 @@ namespace CellSwitch
             user["PhoneNumber"] = phone;
             user["Note"] = note;
             user["Enabled"] = true;
-            this.users.Tables[0].Rows.Add(user);
+            foreach (DataRow row in this.users.Tables[0].Rows)
+            {
+                string currentPhone = (string)row["PhoneNumber"];
+                if (currentPhone.CompareTo(phone) == 0)
+                {
+                    user = null;
+                    break;
+                }
+            }
+            if (user != null)
+                this.users.Tables[0].Rows.Add(user);
         }
 
         private void addNewRow(DataRow row, int[] colIndex)
@@ -821,6 +849,7 @@ namespace CellSwitch
                     {
                         addNewRow(theRow, colIndex);
                     }
+                    toolStripStatus.Text = "Import from Excel completed!";
                 } catch (Exception err)
                 {
                     FormTools.ErrBox(err.Message, "Importing from Excel");
@@ -840,6 +869,11 @@ namespace CellSwitch
         }
 
         private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            import_xsl();
+        }
+
+        private void toolStripButtonImport_Click(object sender, EventArgs e)
         {
             import_xsl();
         }
@@ -918,6 +952,11 @@ namespace CellSwitch
 
         public void export_xsl()
         {
+            if (users.User.Rows.Count == 0)
+            {
+                toolStripStatus.Text = "Nothing to Export!";
+                return;
+            }
             string filename = string.Empty;
             filename = FormTools.saveFileDialog(
                 "Excel 97-2003 files (*.xls)|*.xls|Excel 2007 files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
@@ -927,6 +966,7 @@ namespace CellSwitch
                 try
                 {
                     ExportToExcel(filename, users.Tables[0], "Gizmo Gate");
+                    toolStripStatus.Text = "Export to Excel completed!";
                 }
                 catch (Exception err)
                 {
@@ -935,10 +975,16 @@ namespace CellSwitch
             }
         }
 
+        private void toolStripButtonExport_Click(object sender, EventArgs e)
+        {
+            export_xsl();
+        }
+
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             export_xsl();
         }
         #endregion
+
     }
 }
