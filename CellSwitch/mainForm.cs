@@ -798,7 +798,10 @@ namespace CellSwitch
         private int[] defineCols( DataSet ds )
         {
             int[] colIndex = new int[4];
-	        Array.Clear(colIndex, 0, colIndex.Length);
+	        for (int i=0; i < colIndex.Length; i++)
+	        {
+                colIndex[i] = 0xFF;
+	        }
             int j=0;
             foreach(DataColumn theCol in ds.Tables[0].Columns)
             {
