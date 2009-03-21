@@ -39,7 +39,7 @@ namespace CellSwitch
                 addNewUser(txtFirstName.Text, txtLastName.Text, txtPhone.Text, txtNote.Text);
             } catch (Exception err)
             {
-                FormTools.ErrBox(err.ToString(), "Add new user");
+                FormTools.ErrBox(err.Message, "Add new user");
             } finally {
                 this.Close();
             }

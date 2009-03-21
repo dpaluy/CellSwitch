@@ -229,7 +229,7 @@ namespace CellSwitch
             }
             catch (Exception ex)
             {
-                FormTools.ErrBox(ex.ToString(), "Script File Error");
+                FormTools.ErrBox(ex.Message, "Script File Error");
                 execScript = false;
             }
         }

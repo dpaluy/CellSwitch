@@ -25,7 +25,7 @@ namespace CellSwitch
                 Application.Run(new mainForm(sp, cm));
             } catch (Exception e)
             {
-                FormTools.ErrBox(e.ToString(), "Error");
+                FormTools.ErrBox(e.Message, "Error");
             }
         }
     }

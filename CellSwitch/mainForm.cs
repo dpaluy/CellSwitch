@@ -8,12 +8,14 @@ using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Data.OleDb;
 
 namespace CellSwitch
 {
     public partial class mainForm : Form
     {
         #region Variables
+        private enum COLUMNS { FIRST_NAME, LAST_NAME, PHONE, NOTE };
         private int MAX_ALLOWED_USERS = 2000;
         private SwitchProtocol sp_;
         private CommunicationManager cm_;
@@ -644,13 +646,145 @@ namespace CellSwitch
             this.users.Tables[0].Rows.Add(user);
         }
 
-        private void addNewRow(DataRow row)
+        private void addNewRow(DataRow row, int[] colIndex)
         {
-            string firstName = (string)row["First Name"];
-            string lastName = (string)row["Last Name"];
-            string phone = (string)row["Phone"];
-            string note = (string)row["Note"];
+            string firstName = string.Empty;
+            try
+            {
+                firstName = (string)row[colIndex[(int)COLUMNS.FIRST_NAME]];
+            }
+            catch (Exception) { }
+
+            string lastName = string.Empty;
+            try {
+                lastName = (string)row[colIndex[(int)COLUMNS.LAST_NAME]];
+            } catch (Exception){}
+            
+
+            string phone = string.Empty;
+            try{
+                phone = (string)row[colIndex[(int)COLUMNS.PHONE]];
+            } catch (InvalidCastException)
+            {
+                double num = (double)row[colIndex[(int)COLUMNS.PHONE]];
+                phone = num.ToString();
+            }
+            
+            string note = string.Empty;
+            try{
+                  note = (string)row[colIndex[(int)COLUMNS.NOTE]];
+            } catch (Exception) {}                
+            
             addNewUser(firstName, lastName, phone, note);
+        }
+
+
+        #endregion
+
+        #region XSL tools
+        /// <summary>
+        /// This mehtod retrieves the excel sheet names from 
+        /// an excel workbook.
+        /// </summary>
+        /// <param name="excelFile">The excel file.</param>
+        /// <returns>String[]</returns>
+        private String[] GetExcelSheetNames(string excelFile)
+        {
+            OleDbConnection objConn = null;
+            System.Data.DataTable dt = null;
+
+            try
+            {
+                // Connection String. Change the excel file to the file you
+                // will search.
+                string ext = System.IO.Path.GetExtension(excelFile).ToLower();
+                string connString = defineExcelConnection(ext, excelFile);
+                
+                // Create connection object by using the preceding connection string.
+                objConn = new OleDbConnection(connString);
+                // Open connection with the database.
+                objConn.Open();
+                // Get the data table containg the schema guid.
+                dt = objConn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+
+                if (dt == null)
+                {
+                    return null;
+                }
+
+                String[] excelSheets = new String[dt.Rows.Count];
+                int i = 0;
+
+                // Add the sheet name to the string array.
+                foreach (DataRow row in dt.Rows)
+                {
+                    excelSheets[i] = row["TABLE_NAME"].ToString();
+                    i++;
+                }
+
+                return excelSheets;
+            }
+            catch (Exception )
+            {
+                return null;
+            }
+            finally
+            {
+                // Clean up.
+                if (objConn != null)
+                {
+                    objConn.Close();
+                    objConn.Dispose();
+                }
+                if (dt != null)
+                {
+                    dt.Dispose();
+                }
+            }
+        }
+
+        private string defineExcelConnection(string ext, string sheetToCreate)
+        {
+            string strCn = string.Empty;
+            switch (ext)
+            {
+                case ".xls":
+                    strCn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + sheetToCreate + "; Extended Properties='Excel 8.0;HDR=YES'";
+                    break;
+                case ".xlsx":
+                    strCn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + sheetToCreate + ";Extended Properties='Excel 12.0 Xml;HDR=YES' ";
+                    break;
+                case ".xlsb":
+                    strCn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + sheetToCreate + ";Extended Properties='Excel 12.0;HDR=YES' ";
+                    break;
+                case ".xlsm":
+                    strCn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + sheetToCreate + ";Extended Properties='Excel 12.0 Macro;HDR=YES' ";
+                    break;
+                default:
+                    FormTools.ErrBox("Unknown Excel Format!", "Import/Export from/to Excel");
+                    break;
+            }
+            return strCn;
+        }
+
+        private int[] defineCols( DataSet ds )
+        {
+            int[] colIndex = new int[4];
+	        Array.Clear(colIndex, 0, colIndex.Length);
+            int j=0;
+            foreach(DataColumn theCol in ds.Tables[0].Columns)
+            {
+                if (theCol.ColumnName.StartsWith("First"))
+                    colIndex[(int)COLUMNS.FIRST_NAME] = j;
+                else if (theCol.ColumnName.StartsWith("Last"))
+                    colIndex[(int)COLUMNS.LAST_NAME] = j;
+                else if (theCol.ColumnName.StartsWith("Phone"))
+                    colIndex[(int)COLUMNS.PHONE] = j;
+                else if (theCol.ColumnName.StartsWith("Note"))
+                    colIndex[(int)COLUMNS.NOTE] = j;
+                j++;
+            }
+            return colIndex;
         }
 
         #endregion
@@ -658,28 +792,48 @@ namespace CellSwitch
         #region Xsl Import
         public void import_xsl()
         {
+            System.Data.OleDb.OleDbDataAdapter da = null;
+            DataSet ds = null;
             string filename = string.Empty;
-            filename = FormTools.openFileDialog("Excel files (*.xls)|*.xls|All files (*.*)|*.*", "Import from...");
+            filename = FormTools.openFileDialog(
+                "Excel 97-2003 files (*.xls)|*.xls|Excel 2007 files (*.xlsx)|*.xlsx|All files (*.*)|*.*", "Import from...");
             if (filename.Length > 0)
             {
-                String strConn = "Provider=Microsoft.Jet.OLEDB.4.0;" +
-                             "Data Source=" + filename + ";" +
-                             "Extended Properties=Excel 8.0;";
+                string ext = System.IO.Path.GetExtension(filename).ToLower();
+                string strConn = defineExcelConnection(ext, filename);
+                if (strConn.Length <= 0)
+                    return;
                 try
                 {
-                    DataSet ds = new DataSet();
+                    ds = new DataSet();
+                    
+                    String[] SheetsArray = GetExcelSheetNames(filename);
+
                     //You must use the $ after the object you reference in the spreadsheet
-                    System.Data.OleDb.OleDbDataAdapter da = new System.Data.OleDb.OleDbDataAdapter(
-                                                    "SELECT * FROM [Sheet1$]", strConn);
+                    string sheet = (SheetsArray[0].EndsWith("$")) ? SheetsArray[0] : SheetsArray[0] + "$";
+                    string sql = "SELECT * FROM [" + sheet + "]";
+                    da = new System.Data.OleDb.OleDbDataAdapter(sql, strConn);
                     da.Fill(ds);
+
+                    int[] colIndex = defineCols(ds);
 
                     foreach (DataRow theRow in ds.Tables[0].Rows)
                     {
-                        addNewRow(theRow);
+                        addNewRow(theRow, colIndex);
                     }
                 } catch (Exception err)
                 {
-                    FormTools.ErrBox(err.ToString(), "Importing from Excel");
+                    FormTools.ErrBox(err.Message, "Importing from Excel");
+                }
+                finally
+                {
+                    // Clean up.
+                    if (da != null)
+                        da.Dispose();
+                    if (ds != null)
+                    {
+                        ds.Dispose();
+                    }
                 }
                 dataGridView.ClearSelection();
             }
@@ -692,9 +846,98 @@ namespace CellSwitch
         #endregion
 
         #region Xsl Export
+        private void ExportToExcel(string sheetToCreate, DataTable dtToExport, string tableName)
+        {
+            List<DataRow> rows = new List<DataRow>();
+            foreach (DataRow row in dtToExport.Rows) rows.Add(row);
+            subExportToExcel(sheetToCreate, rows, dtToExport, tableName);
+        }
+
+        private void subExportToExcel(string sheetToCreate, List<DataRow> selectedRows, DataTable origDataTable, string tableName)
+        {
+            char Space = ' ';
+            string dest = sheetToCreate;
+            int i = 0;
+            while (File.Exists(dest))
+            {
+                dest = Path.GetDirectoryName(sheetToCreate) + "\\" + Path.GetFileName(sheetToCreate) + i + Path.GetExtension(sheetToCreate);
+                i += 1;
+            }
+            sheetToCreate = dest;
+            if (tableName == null) tableName = string.Empty;
+            tableName = tableName.Trim().Replace(Space, '_');
+            if (tableName.Length == 0) tableName = origDataTable.TableName.Replace(Space, '_');
+            if (tableName.Length == 0) tableName = "NoTableName";
+            if (tableName.Length > 30) tableName = tableName.Substring(0, 30);
+            //Excel names are less than 31 chars
+            string queryCreateExcelTable = "CREATE TABLE [" + tableName + "] (";
+            Dictionary<string, string> colNames = new Dictionary<string, string>();
+            foreach (DataColumn dc in origDataTable.Columns)
+            {
+                //Cause the query to name each of the columns to be created.
+                string modifiedcolName = dc.ColumnName.Replace(Space, '_').Replace('.', '#');
+                string origColName = dc.ColumnName;
+                colNames.Add(modifiedcolName, origColName);
+                queryCreateExcelTable += "[" + modifiedcolName + "]" + " text,";
+            }
+            queryCreateExcelTable = queryCreateExcelTable.TrimEnd(new char[] { Convert.ToChar(",") }) + ")";
+            //adds the closing parentheses to the query string
+            if (selectedRows.Count > 65000 && sheetToCreate.ToLower().EndsWith(".xls"))
+            {
+                //use Excel 2007 for large sheets.
+                sheetToCreate = sheetToCreate.ToLower().Replace(".xls", string.Empty) + ".xlsx";
+            }
+            string ext = System.IO.Path.GetExtension(sheetToCreate).ToLower();
+            string strConn = defineExcelConnection(ext, sheetToCreate);
+            if (strConn.Length <= 0)
+                return;
+
+            System.Data.OleDb.OleDbConnection cn = new System.Data.OleDb.OleDbConnection(strConn);
+            System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand(queryCreateExcelTable, cn);
+            cn.Open();
+            cmd.ExecuteNonQuery();
+            System.Data.OleDb.OleDbDataAdapter da = new System.Data.OleDb.OleDbDataAdapter("SELECT * FROM [" + tableName + "]", cn);
+            System.Data.OleDb.OleDbCommandBuilder cb = new System.Data.OleDb.OleDbCommandBuilder(da);
+            //creates the INSERT INTO command
+            cb.QuotePrefix = "[";
+            cb.QuoteSuffix = "]";
+            cmd = cb.GetInsertCommand();
+            //gets a hold of the INSERT INTO command.
+            foreach (DataRow row in selectedRows)
+            {
+                foreach (System.Data.OleDb.OleDbParameter param in cmd.Parameters)
+                    param.Value = row[colNames[param.SourceColumn]];
+                cmd.ExecuteNonQuery(); //INSERT INTO command.
+            }
+            cn.Close();
+            cn.Dispose();
+            da.Dispose();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
         public void export_xsl()
         {
+            string filename = string.Empty;
+            filename = FormTools.saveFileDialog(
+                "Excel 97-2003 files (*.xls)|*.xls|Excel 2007 files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
+                "Export to Excel...");
+            if (filename.Length > 0)
+            {
+                try
+                {
+                    ExportToExcel(filename, users.Tables[0], "Gizmo Gate");
+                }
+                catch (Exception err)
+                {
+                    FormTools.ErrBox(err.Message, "Exporting to Excel");
+                }
+            }
+        }
 
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            export_xsl();
         }
         #endregion
     }
